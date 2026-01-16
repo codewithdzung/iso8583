@@ -7,6 +7,7 @@ require_relative "iso8583/field"
 require_relative "iso8583/field_definitions"
 require_relative "iso8583/codec"
 require_relative "iso8583/bitmap"
+require_relative "iso8583/message"
 
 # ISO 8583 Financial Messaging Library
 # 
