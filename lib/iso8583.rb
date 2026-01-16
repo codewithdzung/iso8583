@@ -3,6 +3,8 @@
 require 'set'
 require_relative "iso8583/version"
 require_relative "iso8583/errors"
+require_relative "iso8583/field"
+require_relative "iso8583/field_definitions"
 require_relative "iso8583/bitmap"
 
 # ISO 8583 Financial Messaging Library
