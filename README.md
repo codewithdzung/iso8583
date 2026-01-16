@@ -1,43 +1,169 @@
-# Iso8583
+# ISO8583 - Modern Ruby Financial Messaging Library
 
-TODO: Delete this and the text below, and describe your gem
+[![Ruby](https://img.shields.io/badge/ruby-%3E%3D%203.1.0-ruby.svg)](https://www.ruby-lang.org/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/iso8583`. To experiment with that code, run `bin/console` for an interactive prompt.
+A modern, clean, and well-tested Ruby implementation of the ISO 8583 financial messaging protocol. This library provides a robust framework for parsing, building, and validating ISO 8583 messages commonly used in payment card systems, ATM transactions, and financial networks.
+
+## Features
+
+- 🎯 **Clean API** - Intuitive and easy-to-use interface
+- 📦 **Multiple Encoding Formats** - Support for ASCII, BCD, and Binary encoding
+- ✅ **Validation** - Built-in field validation and type checking
+- 🔒 **Type Safety** - Strong typing for field definitions
+- 📝 **Comprehensive Tests** - Full test coverage
+- 🚀 **Performance** - Optimized for speed and memory efficiency
+- 📚 **Well Documented** - Clear examples and API documentation
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem 'iso8583'
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+And then execute:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+bundle install
+```
+
+Or install it yourself as:
+
+```bash
+gem install iso8583
+```
+
+## Quick Start
+
+```ruby
+require 'iso8583'
+
+# Create a new ISO 8583 message
+message = Iso8583::Message.new
+
+# Set message type
+message.mti = "0200"
+
+# Set fields
+message[2] = "4111111111111111"  # Primary Account Number
+message[3] = "000000"             # Processing Code
+message[4] = "000000010000"       # Transaction Amount
+message[7] = "0110153540"         # Transmission Date & Time
+
+# Encode the message
+encoded = message.encode
+
+# Parse a message
+parsed = Iso8583::Message.parse(encoded)
+puts parsed[2]  # => "4111111111111111"
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+### Creating Messages
+
+```ruby
+# Create a new authorization request
+message = Iso8583::Message.new(mti: "0100")
+
+# Set fields using field numbers
+message[2] = "5200000000000001"   # PAN
+message[3] = "000000"              # Processing Code
+message[4] = "000000050000"        # Amount
+message[11] = "123456"             # STAN (System Trace Audit Number)
+message[41] = "TERMINAL001"        # Card Acceptor Terminal ID
+message[49] = "840"                # Currency Code (USD)
+```
+
+### Parsing Messages
+
+```ruby
+# Parse from binary or ASCII format
+raw_message = "..." # Your ISO 8583 message bytes
+message = Iso8583::Message.parse(raw_message)
+
+# Access fields
+pan = message[2]
+amount = message[4]
+stan = message[11]
+
+# Check if field is present
+if message.has_field?(39)
+  response_code = message[39]
+end
+```
+
+### Field Validation
+
+```ruby
+message = Iso8583::Message.new
+
+# Automatic validation
+begin
+  message[4] = "123"  # Too short for amount field
+rescue Iso8583::ValidationError => e
+  puts e.message
+end
+```
+
+## ISO 8583 Basics
+
+ISO 8583 is an international standard for financial transaction card originated messages. A message consists of:
+
+1. **MTI (Message Type Indicator)** - 4 digits indicating the message type
+2. **Bitmap** - Indicates which fields are present in the message
+3. **Data Fields** - The actual transaction data (up to 128 fields)
+
+### Message Type Indicator (MTI)
+
+The MTI is a 4-digit numeric field:
+- First digit: Version (0 = ISO 8583:1987, 1 = ISO 8583:1993, 2 = ISO 8583:2003)
+- Second digit: Message class (0 = Reserved, 1 = Authorization, 2 = Financial, etc.)
+- Third digit: Message function (0 = Request, 1 = Response, etc.)
+- Fourth digit: Message origin (0 = Acquirer, 1 = Issuer, etc.)
+
+Common MTI values:
+- `0100` - Authorization Request
+- `0110` - Authorization Response
+- `0200` - Financial Transaction Request
+- `0210` - Financial Transaction Response
+- `0800` - Network Management Request
+- `0810` - Network Management Response
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
+
+## Testing
+
+```bash
+bundle exec rake spec
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/iso8583. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/iso8583/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/nguyentiendzung/iso8583.
+
+This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [MIT License](LICENSE.txt).
 
-## Code of Conduct
+## Acknowledgments
 
-Everyone interacting in the Iso8583 project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/iso8583/blob/master/CODE_OF_CONDUCT.md).
+This library implements the ISO 8583 standard for financial transaction card originated messages. Special thanks to the financial technology community for their valuable insights.
+
+## Author
+
+**Nguyen Tien Dzung**
+- Email: imnguyentiendzung@gmail.com
+- GitHub: [@nguyentiendzung](https://github.com/nguyentiendzung)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes.
