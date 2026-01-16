@@ -8,11 +8,12 @@ Gem::Specification.new do |spec|
   spec.authors = ['Nguyen Tien Dzung']
   spec.email = ['dzung.nguyentien@every-pay.com']
 
+  spec.metadata['rubygems_mfa_required'] = 'true'
   spec.summary = 'Modern Ruby implementation of ISO 8583 financial messaging protocol'
   spec.description = 'A clean, well-tested Ruby library for parsing, building, and validating ISO 8583 financial messages with support for various encoding formats (ASCII, BCD, Binary)'
   spec.homepage = 'https://github.com/nguyentiendzung/iso8583'
   spec.license = 'MIT'
-  spec.required_ruby_version = '>= 3.1.0'
+  spec.required_ruby_version = '>= 3.4.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['source_code_uri'] = 'https://github.com/nguyentiendzung/iso8583'

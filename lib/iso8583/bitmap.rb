@@ -98,7 +98,7 @@ module Iso8583
           field = (byte_index * 8) + (7 - bit_index) + 1
           next if field == 1 # Skip bit 1 (reserved for secondary bitmap indicator)
 
-          fields << field if (byte & (1 << bit_index)) != 0
+          fields << field if byte.anybits?(1 << bit_index)
         end
       end
 
@@ -108,7 +108,7 @@ module Iso8583
           byte = bytes[byte_index]
           (0...8).each do |bit_index|
             field = ((byte_index - 8) * 8) + (7 - bit_index) + 65
-            fields << field if (byte & (1 << bit_index)) != 0
+            fields << field if byte.anybits?(1 << bit_index)
           end
         end
       end

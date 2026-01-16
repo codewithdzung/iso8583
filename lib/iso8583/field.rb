@@ -44,7 +44,7 @@ module Iso8583
     # @param value [String] Value to validate
     # @return [Boolean] true if valid
     # @raise [ValidationError] if invalid
-    def validate!(value)
+    def validate!(value) # rubocop:disable Naming/PredicateMethod
       return true if value.nil?
 
       value_str = value.to_s
