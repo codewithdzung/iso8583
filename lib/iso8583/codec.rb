@@ -8,7 +8,7 @@ module Iso8583
     # @param value [String] Value to encode
     # @return [String] Encoded value
     def encode(field, value)
-      raise NotImplementedError, "Subclasses must implement encode"
+      raise NotImplementedError, 'Subclasses must implement encode'
     end
 
     # Decode a field value
@@ -17,7 +17,7 @@ module Iso8583
     # @param offset [Integer] Starting offset in data
     # @return [Array<String, Integer>] Decoded value and bytes consumed
     def decode(field, data, offset = 0)
-      raise NotImplementedError, "Subclasses must implement decode"
+      raise NotImplementedError, 'Subclasses must implement decode'
     end
 
     protected
@@ -37,8 +37,11 @@ module Iso8583
     # @return [Integer] Decoded length
     def decode_length(data, offset, indicator_size)
       length_str = data[offset, indicator_size]
-      raise ParseError, "Insufficient data for length indicator" if length_str.nil? || length_str.length < indicator_size
-      
+      if length_str.nil? || length_str.length < indicator_size
+        raise ParseError,
+              'Insufficient data for length indicator'
+      end
+
       length_str.to_i
     end
   end
@@ -84,7 +87,7 @@ module Iso8583
         raise ParseError, "Insufficient data for field #{field.number}" if value.nil? || value.length < field.max_length
 
         pos += field.max_length
-        value = value.rstrip  # Remove padding
+        value = value.rstrip # Remove padding
       end
 
       [value, pos - offset]
@@ -132,12 +135,15 @@ module Iso8583
 
       # Calculate bytes needed
       bcd_bytes = (value_length + 1) / 2
-      
+
       bcd_data = data[pos, bcd_bytes]
-      raise ParseError, "Insufficient BCD data for field #{field.number}" if bcd_data.nil? || bcd_data.bytesize < bcd_bytes
+      if bcd_data.nil? || bcd_data.bytesize < bcd_bytes
+        raise ParseError,
+              "Insufficient BCD data for field #{field.number}"
+      end
 
       # Decode BCD to string
-      value = +''  # Unfrozen string
+      value = +'' # Unfrozen string
       bcd_data.bytes.each do |byte|
         high = (byte >> 4) & 0x0F
         low = byte & 0x0F
@@ -145,7 +151,7 @@ module Iso8583
       end
 
       # Remove leading zero if original length was odd
-      value = value[1..-1] if value_length.odd?
+      value = value[1..] if value_length.odd?
       value = value[0, value_length]
 
       pos += bcd_bytes
@@ -158,20 +164,20 @@ module Iso8583
   class BinaryCodec < Codec
     def encode(field, value)
       value_str = value.to_s
-      
+
       # For binary fields, we don't validate format
       if field.variable_length?
         if value_str.bytesize > field.max_length
-          raise InvalidLengthError, 
-            "Field #{field.number}: binary data size #{value_str.bytesize} exceeds max #{field.max_length}"
+          raise InvalidLengthError,
+                "Field #{field.number}: binary data size #{value_str.bytesize} exceeds max #{field.max_length}"
         end
-        
+
         length_indicator = encode_length(value_str.bytesize, field.length_indicator_size)
         length_indicator + value_str
       else
         if value_str.bytesize != field.max_length
           raise InvalidLengthError,
-            "Field #{field.number}: expected binary size #{field.max_length}, got #{value_str.bytesize}"
+                "Field #{field.number}: expected binary size #{field.max_length}, got #{value_str.bytesize}"
         end
         value_str
       end
@@ -195,7 +201,10 @@ module Iso8583
         pos += length
       else
         value = data[pos, field.max_length]
-        raise ParseError, "Insufficient binary data for field #{field.number}" if value.nil? || value.bytesize < field.max_length
+        if value.nil? || value.bytesize < field.max_length
+          raise ParseError,
+                "Insufficient binary data for field #{field.number}"
+        end
 
         pos += field.max_length
       end

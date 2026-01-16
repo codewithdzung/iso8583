@@ -8,10 +8,10 @@ module Iso8583
       numeric: /^\d+$/,
       alpha: /^[A-Za-z]+$/,
       alphanumeric: /^[A-Za-z0-9]+$/,
-      alphanumeric_special: /^[ -~]+$/,  # Printable ASCII
-      binary: //,  # Any binary data
-      track2: /^[0-9=D]+$/,  # Track 2 data format
-      amount: /^\d{12}$/  # 12-digit amount
+      alphanumeric_special: /^[ -~]+$/, # Printable ASCII
+      binary: //, # Any binary data
+      track2: /^[0-9=D]+$/, # Track 2 data format
+      amount: /^\d{12}$/ # 12-digit amount
     }.freeze
 
     # Length encoding types
@@ -31,7 +31,7 @@ module Iso8583
     # @param encoding [Symbol] :ascii, :bcd, or :binary
     def initialize(number:, name:, length_type:, max_length:, data_type: :alphanumeric_special, encoding: :ascii)
       validate_params!(number, length_type, data_type, encoding)
-      
+
       @number = number
       @name = name
       @length_type = length_type
@@ -101,12 +101,12 @@ module Iso8583
     def validate_length!(value)
       if length_type == :fixed
         if value.length != max_length
-          raise InvalidLengthError, 
-            "Field #{number} (#{name}): expected length #{max_length}, got #{value.length}"
+          raise InvalidLengthError,
+                "Field #{number} (#{name}): expected length #{max_length}, got #{value.length}"
         end
       elsif value.length > max_length
         raise InvalidLengthError,
-          "Field #{number} (#{name}): maximum length #{max_length}, got #{value.length}"
+              "Field #{number} (#{name}): maximum length #{max_length}, got #{value.length}"
       end
     end
 
@@ -115,7 +115,7 @@ module Iso8583
       return if pattern.match?(value)
 
       raise InvalidFormatError,
-        "Field #{number} (#{name}): invalid format for #{data_type}. Value: #{value.inspect}"
+            "Field #{number} (#{name}): invalid format for #{data_type}. Value: #{value.inspect}"
     end
   end
 end

@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 require 'set'
-require_relative "iso8583/version"
-require_relative "iso8583/errors"
-require_relative "iso8583/field"
-require_relative "iso8583/field_definitions"
-require_relative "iso8583/codec"
-require_relative "iso8583/bitmap"
-require_relative "iso8583/message"
+require_relative 'iso8583/version'
+require_relative 'iso8583/errors'
+require_relative 'iso8583/field'
+require_relative 'iso8583/field_definitions'
+require_relative 'iso8583/codec'
+require_relative 'iso8583/bitmap'
+require_relative 'iso8583/message'
 
 # ISO 8583 Financial Messaging Library
-# 
+#
 # This module provides a complete implementation of the ISO 8583 standard
 # for financial transaction messages. It supports encoding, decoding, and
 # validation of messages with multiple encoding formats.

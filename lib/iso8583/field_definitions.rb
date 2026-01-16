@@ -8,7 +8,7 @@ module Iso8583
     FIELDS = {
       0 => Field.new(
         number: 0,
-        name: "Message Type Indicator (MTI)",
+        name: 'Message Type Indicator (MTI)',
         length_type: :fixed,
         max_length: 4,
         data_type: :numeric,
@@ -16,7 +16,7 @@ module Iso8583
       ),
       2 => Field.new(
         number: 2,
-        name: "Primary Account Number (PAN)",
+        name: 'Primary Account Number (PAN)',
         length_type: :llvar,
         max_length: 19,
         data_type: :numeric,
@@ -24,7 +24,7 @@ module Iso8583
       ),
       3 => Field.new(
         number: 3,
-        name: "Processing Code",
+        name: 'Processing Code',
         length_type: :fixed,
         max_length: 6,
         data_type: :numeric,
@@ -32,7 +32,7 @@ module Iso8583
       ),
       4 => Field.new(
         number: 4,
-        name: "Amount, Transaction",
+        name: 'Amount, Transaction',
         length_type: :fixed,
         max_length: 12,
         data_type: :numeric,
@@ -40,7 +40,7 @@ module Iso8583
       ),
       7 => Field.new(
         number: 7,
-        name: "Transmission Date & Time",
+        name: 'Transmission Date & Time',
         length_type: :fixed,
         max_length: 10,
         data_type: :numeric,
@@ -48,7 +48,7 @@ module Iso8583
       ),
       11 => Field.new(
         number: 11,
-        name: "System Trace Audit Number (STAN)",
+        name: 'System Trace Audit Number (STAN)',
         length_type: :fixed,
         max_length: 6,
         data_type: :numeric,
@@ -56,7 +56,7 @@ module Iso8583
       ),
       12 => Field.new(
         number: 12,
-        name: "Local Transaction Time",
+        name: 'Local Transaction Time',
         length_type: :fixed,
         max_length: 6,
         data_type: :numeric,
@@ -64,7 +64,7 @@ module Iso8583
       ),
       13 => Field.new(
         number: 13,
-        name: "Local Transaction Date",
+        name: 'Local Transaction Date',
         length_type: :fixed,
         max_length: 4,
         data_type: :numeric,
@@ -72,7 +72,7 @@ module Iso8583
       ),
       14 => Field.new(
         number: 14,
-        name: "Card Expiration Date",
+        name: 'Card Expiration Date',
         length_type: :fixed,
         max_length: 4,
         data_type: :numeric,
@@ -80,7 +80,7 @@ module Iso8583
       ),
       18 => Field.new(
         number: 18,
-        name: "Merchant Type",
+        name: 'Merchant Type',
         length_type: :fixed,
         max_length: 4,
         data_type: :numeric,
@@ -88,7 +88,7 @@ module Iso8583
       ),
       22 => Field.new(
         number: 22,
-        name: "Point of Service Entry Mode",
+        name: 'Point of Service Entry Mode',
         length_type: :fixed,
         max_length: 3,
         data_type: :numeric,
@@ -96,7 +96,7 @@ module Iso8583
       ),
       25 => Field.new(
         number: 25,
-        name: "Point of Service Condition Code",
+        name: 'Point of Service Condition Code',
         length_type: :fixed,
         max_length: 2,
         data_type: :numeric,
@@ -104,7 +104,7 @@ module Iso8583
       ),
       28 => Field.new(
         number: 28,
-        name: "Amount, Transaction Fee",
+        name: 'Amount, Transaction Fee',
         length_type: :fixed,
         max_length: 9,
         data_type: :numeric,
@@ -112,7 +112,7 @@ module Iso8583
       ),
       32 => Field.new(
         number: 32,
-        name: "Acquiring Institution ID",
+        name: 'Acquiring Institution ID',
         length_type: :llvar,
         max_length: 11,
         data_type: :numeric,
@@ -120,7 +120,7 @@ module Iso8583
       ),
       35 => Field.new(
         number: 35,
-        name: "Track 2 Data",
+        name: 'Track 2 Data',
         length_type: :llvar,
         max_length: 37,
         data_type: :track2,
@@ -128,7 +128,7 @@ module Iso8583
       ),
       37 => Field.new(
         number: 37,
-        name: "Retrieval Reference Number",
+        name: 'Retrieval Reference Number',
         length_type: :fixed,
         max_length: 12,
         data_type: :alphanumeric,
@@ -136,7 +136,7 @@ module Iso8583
       ),
       38 => Field.new(
         number: 38,
-        name: "Authorization ID Response",
+        name: 'Authorization ID Response',
         length_type: :fixed,
         max_length: 6,
         data_type: :alphanumeric,
@@ -144,7 +144,7 @@ module Iso8583
       ),
       39 => Field.new(
         number: 39,
-        name: "Response Code",
+        name: 'Response Code',
         length_type: :fixed,
         max_length: 2,
         data_type: :alphanumeric,
@@ -152,7 +152,7 @@ module Iso8583
       ),
       41 => Field.new(
         number: 41,
-        name: "Card Acceptor Terminal ID",
+        name: 'Card Acceptor Terminal ID',
         length_type: :fixed,
         max_length: 8,
         data_type: :alphanumeric_special,
@@ -160,7 +160,7 @@ module Iso8583
       ),
       42 => Field.new(
         number: 42,
-        name: "Card Acceptor ID Code",
+        name: 'Card Acceptor ID Code',
         length_type: :fixed,
         max_length: 15,
         data_type: :alphanumeric_special,
@@ -168,7 +168,7 @@ module Iso8583
       ),
       43 => Field.new(
         number: 43,
-        name: "Card Acceptor Name/Location",
+        name: 'Card Acceptor Name/Location',
         length_type: :fixed,
         max_length: 40,
         data_type: :alphanumeric_special,
@@ -176,7 +176,7 @@ module Iso8583
       ),
       49 => Field.new(
         number: 49,
-        name: "Currency Code, Transaction",
+        name: 'Currency Code, Transaction',
         length_type: :fixed,
         max_length: 3,
         data_type: :numeric,
@@ -184,7 +184,7 @@ module Iso8583
       ),
       52 => Field.new(
         number: 52,
-        name: "Personal ID Number (PIN) Data",
+        name: 'Personal ID Number (PIN) Data',
         length_type: :fixed,
         max_length: 16,
         data_type: :binary,
@@ -192,7 +192,7 @@ module Iso8583
       ),
       54 => Field.new(
         number: 54,
-        name: "Additional Amounts",
+        name: 'Additional Amounts',
         length_type: :lllvar,
         max_length: 120,
         data_type: :alphanumeric_special,
@@ -200,7 +200,7 @@ module Iso8583
       ),
       55 => Field.new(
         number: 55,
-        name: "ICC Data - EMV",
+        name: 'ICC Data - EMV',
         length_type: :lllvar,
         max_length: 255,
         data_type: :binary,
@@ -208,7 +208,7 @@ module Iso8583
       ),
       62 => Field.new(
         number: 62,
-        name: "Custom Payment Service Data",
+        name: 'Custom Payment Service Data',
         length_type: :lllvar,
         max_length: 999,
         data_type: :alphanumeric_special,
@@ -216,7 +216,7 @@ module Iso8583
       ),
       63 => Field.new(
         number: 63,
-        name: "Private Data",
+        name: 'Private Data',
         length_type: :lllvar,
         max_length: 999,
         data_type: :alphanumeric_special,
@@ -224,7 +224,7 @@ module Iso8583
       ),
       90 => Field.new(
         number: 90,
-        name: "Original Data Elements",
+        name: 'Original Data Elements',
         length_type: :fixed,
         max_length: 42,
         data_type: :numeric,
@@ -232,7 +232,7 @@ module Iso8583
       ),
       95 => Field.new(
         number: 95,
-        name: "Replacement Amounts",
+        name: 'Replacement Amounts',
         length_type: :fixed,
         max_length: 42,
         data_type: :alphanumeric_special,
@@ -240,7 +240,7 @@ module Iso8583
       ),
       100 => Field.new(
         number: 100,
-        name: "Receiving Institution ID",
+        name: 'Receiving Institution ID',
         length_type: :llvar,
         max_length: 11,
         data_type: :numeric,
@@ -248,7 +248,7 @@ module Iso8583
       ),
       102 => Field.new(
         number: 102,
-        name: "Account ID 1",
+        name: 'Account ID 1',
         length_type: :llvar,
         max_length: 28,
         data_type: :alphanumeric_special,
@@ -256,7 +256,7 @@ module Iso8583
       ),
       103 => Field.new(
         number: 103,
-        name: "Account ID 2",
+        name: 'Account ID 2',
         length_type: :llvar,
         max_length: 28,
         data_type: :alphanumeric_special,
@@ -264,7 +264,7 @@ module Iso8583
       ),
       128 => Field.new(
         number: 128,
-        name: "Message Authentication Code (MAC)",
+        name: 'Message Authentication Code (MAC)',
         length_type: :fixed,
         max_length: 16,
         data_type: :binary,

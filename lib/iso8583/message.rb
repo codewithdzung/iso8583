@@ -11,7 +11,7 @@ module Iso8583
     def initialize(mti: nil, fields: {})
       @fields = {}
       @mti = nil
-      
+
       self.mti = mti if mti
       fields.each { |num, value| self[num] = value }
     end
@@ -21,6 +21,7 @@ module Iso8583
     def mti=(value)
       value_str = value.to_s
       raise InvalidFormatError, "MTI must be 4 digits, got: #{value_str.inspect}" unless value_str.match?(/^\d{4}$/)
+
       @mti = value_str
     end
 
@@ -36,7 +37,7 @@ module Iso8583
     # @param value [String] Field value
     def []=(field_num, value)
       field_num = field_num.to_i
-      raise InvalidFieldError, "Field number must be 1-128" unless (1..128).cover?(field_num)
+      raise InvalidFieldError, 'Field number must be 1-128' unless (1..128).cover?(field_num)
 
       if value.nil?
         @fields.delete(field_num)
@@ -46,7 +47,7 @@ module Iso8583
           field_def = FieldDefinitions.get(field_num)
           field_def.validate!(value)
         end
-        
+
         @fields[field_num] = value.to_s
       end
     end
@@ -74,10 +75,10 @@ module Iso8583
     # @param encoding [Symbol] Default encoding for undefined fields (:ascii, :bcd, :binary)
     # @return [String] Encoded message
     def encode(encoding: :ascii)
-      raise MissingFieldError, "MTI is required" unless @mti
+      raise MissingFieldError, 'MTI is required' unless @mti
 
-      result = +""
-      
+      result = +''
+
       # Encode MTI
       result << @mti
 
@@ -88,13 +89,13 @@ module Iso8583
       # Encode each field
       field_numbers.each do |field_num|
         value = @fields[field_num]
-        
+
         # Get field definition or create a generic one
         field_def = FieldDefinitions.get(field_num)
         unless field_def
           # For undefined fields, use generic encoding
           Iso8583.debug("Field #{field_num} not defined, using generic #{encoding} encoding")
-          next  # Skip undefined fields for now
+          next # Skip undefined fields for now
         end
 
         # Get appropriate codec
@@ -111,18 +112,19 @@ module Iso8583
     # @param encoding [Symbol] Default encoding for undefined fields
     # @return [Message] Parsed message
     def self.parse(data, encoding: :ascii)
-      raise ParseError, "Message data cannot be empty" if data.nil? || data.empty?
-      
+      raise ParseError, 'Message data cannot be empty' if data.nil? || data.empty?
+
       offset = 0
-      
+
       # Parse MTI (4 ASCII digits)
       mti = data[offset, 4]
-      raise ParseError, "Invalid MTI" unless mti && mti.length == 4
+      raise ParseError, 'Invalid MTI' unless mti && mti.length == 4
+
       offset += 4
 
       # Parse bitmap
-      raise ParseError, "Insufficient data for bitmap" if data.bytesize < offset + 8
-      
+      raise ParseError, 'Insufficient data for bitmap' if data.bytesize < offset + 8
+
       bitmap = Bitmap.parse_binary(data[offset..-1])
       bitmap_size = bitmap.secondary_bitmap? ? 16 : 8
       offset += bitmap_size
@@ -140,7 +142,7 @@ module Iso8583
 
         # Get appropriate codec
         codec = CodecFactory.get(field_def.encoding)
-        
+
         begin
           value, bytes_consumed = codec.decode(field_def, data, offset)
           message[field_num] = value
@@ -165,7 +167,7 @@ module Iso8583
     # Convert to string representation
     # @return [String]
     def to_s
-      fields_str = field_numbers.map { |num| "#{num}=#{@fields[num].inspect}" }.join(", ")
+      fields_str = field_numbers.map { |num| "#{num}=#{@fields[num].inspect}" }.join(', ')
       "ISO8583 Message MTI=#{@mti} [#{fields_str}]"
     end
 
@@ -193,26 +195,26 @@ module Iso8583
     # Human-readable representation
     # @return [String]
     def pretty_print
-      lines = ["ISO 8583 Message", "=" * 50]
+      lines = ['ISO 8583 Message', '=' * 50]
       lines << "MTI: #{@mti}"
-      lines << ""
-      lines << "Fields:"
-      
+      lines << ''
+      lines << 'Fields:'
+
       field_numbers.each do |field_num|
         field_def = FieldDefinitions.get(field_num)
-        field_name = field_def ? field_def.name : "Unknown"
+        field_name = field_def ? field_def.name : 'Unknown'
         value = @fields[field_num]
-        
+
         # Format binary data as hex
         display_value = if field_def&.encoding == :binary
-          value.unpack1('H*')
-        else
-          value
-        end
-        
-        lines << sprintf("  %3d: %-40s = %s", field_num, field_name, display_value)
+                          value.unpack1('H*')
+                        else
+                          value
+                        end
+
+        lines << format('  %3d: %-40s = %s', field_num, field_name, display_value)
       end
-      
+
       lines.join("\n")
     end
   end

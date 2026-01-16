@@ -56,7 +56,7 @@ RSpec.describe Iso8583::Bitmap do
     it 'encodes primary bitmap only' do
       bitmap = described_class.new([2, 3, 4])
       binary = bitmap.encode_binary
-      
+
       expect(binary.bytesize).to eq(8)
       # Field 2, 3, 4 should be set
       # Binary: 01110000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
@@ -66,7 +66,7 @@ RSpec.describe Iso8583::Bitmap do
     it 'encodes with secondary bitmap' do
       bitmap = described_class.new([2, 65])
       binary = bitmap.encode_binary
-      
+
       expect(binary.bytesize).to eq(16)
       # Bit 1 should be set for secondary bitmap
       expect(binary.bytes[0] & 0x80).to eq(0x80)
@@ -75,7 +75,7 @@ RSpec.describe Iso8583::Bitmap do
     it 'encodes all fields correctly' do
       bitmap = described_class.new([2, 7, 11, 39, 41, 70])
       binary = bitmap.encode_binary
-      
+
       # Verify by parsing back
       parsed = described_class.parse_binary(binary)
       expect(parsed.to_a).to eq([2, 7, 11, 39, 41, 70])
@@ -86,7 +86,7 @@ RSpec.describe Iso8583::Bitmap do
     it 'encodes to hexadecimal' do
       bitmap = described_class.new([2, 3, 4])
       hex = bitmap.encode_hex
-      
+
       expect(hex).to be_a(String)
       expect(hex.length).to eq(16)
       expect(hex).to match(/^[0-9A-F]+$/)
@@ -95,7 +95,7 @@ RSpec.describe Iso8583::Bitmap do
     it 'encodes with secondary bitmap to 32 hex chars' do
       bitmap = described_class.new([2, 65])
       hex = bitmap.encode_hex
-      
+
       expect(hex.length).to eq(32)
     end
   end
@@ -105,7 +105,7 @@ RSpec.describe Iso8583::Bitmap do
       # Set fields 2, 3, 4
       binary = [0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00].pack('C*')
       bitmap = described_class.parse_binary(binary)
-      
+
       expect(bitmap.to_a).to eq([2, 3, 4])
     end
 
@@ -114,7 +114,7 @@ RSpec.describe Iso8583::Bitmap do
       primary = [0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00].pack('C*')
       secondary = [0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00].pack('C*')
       binary = primary + secondary
-      
+
       bitmap = described_class.parse_binary(binary)
       expect(bitmap.to_a).to include(2, 65)
     end
@@ -128,7 +128,7 @@ RSpec.describe Iso8583::Bitmap do
     it 'parses hexadecimal bitmap' do
       hex = '7000000000000000'
       bitmap = described_class.parse_hex(hex)
-      
+
       expect(bitmap.to_a).to eq([2, 3, 4])
     end
 
@@ -141,12 +141,12 @@ RSpec.describe Iso8583::Bitmap do
     it 'preserves fields through encode/decode cycle' do
       original_fields = [2, 3, 4, 7, 11, 12, 28, 39, 41, 42, 63]
       bitmap = described_class.new(original_fields)
-      
+
       # Binary round-trip
       binary = bitmap.encode_binary
       parsed = described_class.parse_binary(binary)
       expect(parsed.to_a).to eq(original_fields)
-      
+
       # Hex round-trip
       hex = bitmap.encode_hex
       parsed = described_class.parse_hex(hex)
@@ -156,7 +156,7 @@ RSpec.describe Iso8583::Bitmap do
     it 'preserves fields with secondary bitmap' do
       original_fields = [2, 7, 11, 39, 65, 70, 90, 128]
       bitmap = described_class.new(original_fields)
-      
+
       binary = bitmap.encode_binary
       parsed = described_class.parse_binary(binary)
       expect(parsed.to_a).to eq(original_fields)
@@ -168,7 +168,7 @@ RSpec.describe Iso8583::Bitmap do
       bitmap1 = described_class.new([2, 3, 4])
       bitmap2 = described_class.new([2, 3, 4])
       bitmap3 = described_class.new([2, 3, 5])
-      
+
       expect(bitmap1).to eq(bitmap2)
       expect(bitmap1).not_to eq(bitmap3)
     end
