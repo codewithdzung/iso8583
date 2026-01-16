@@ -146,9 +146,8 @@ bundle exec rake spec
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/nguyentiendzung/iso8583.
+Bug reports and pull requests are welcome on GitHub at https://github.com/codewithdzung/iso8583.
 
-This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
@@ -162,8 +161,6 @@ This library implements the ISO 8583 standard for financial transaction card ori
 
 **Nguyen Tien Dzung**
 - Email: imnguyentiendzung@gmail.com
-- GitHub: [@nguyentiendzung](https://github.com/nguyentiendzung)
+- GitHub: [@codewithdzung](https://github.com/codewithdzung)
 
-## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for a list of changes.
