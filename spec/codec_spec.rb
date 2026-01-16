@@ -115,7 +115,7 @@ RSpec.describe Iso8583::AsciiCodec do
     it 'raises error when length exceeds max' do
       # Length indicator says 99 (exceeds max of 19)
       expect do
-        codec.decode(field, '99' + '1' * 99)
+        codec.decode(field, "99#{'1' * 99}")
       end.to raise_error(Iso8583::ParseError, /exceeds max/)
     end
   end
@@ -200,7 +200,7 @@ RSpec.describe Iso8583::BcdCodec do
       it 'decodes with ASCII length indicator' do
         # "16" + BCD(4111111111111111)
         bcd_value = [0x41, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0x11].pack('C*')
-        data = '16' + bcd_value
+        data = "16#{bcd_value}"
 
         decoded, bytes_consumed = codec.decode(field, data)
         expect(decoded).to eq('4111111111111111')
@@ -248,7 +248,7 @@ RSpec.describe Iso8583::BinaryCodec do
       end
 
       it 'encodes binary data as-is' do
-        value = "\x01\x02\x03\x04" + "\x00" * 12
+        value = "\u0001\u0002\u0003\u0004#{"\x00" * 12}"
         encoded = codec.encode(field, value)
 
         expect(encoded).to eq(value)
@@ -256,7 +256,7 @@ RSpec.describe Iso8583::BinaryCodec do
       end
 
       it 'decodes binary data as-is' do
-        data = "\x01\x02\x03\x04" + "\x00" * 12
+        data = "\u0001\u0002\u0003\u0004#{"\x00" * 12}"
 
         decoded, bytes_consumed = codec.decode(field, data)
         expect(decoded).to eq(data)
@@ -282,13 +282,13 @@ RSpec.describe Iso8583::BinaryCodec do
 
         # Length in ASCII
         expect(encoded[0, 3]).to eq('009')
-        expect(encoded[3..-1]).to eq(value)
+        expect(encoded[3..]).to eq(value)
         expect(encoded.bytesize).to eq(3 + 9)
       end
 
       it 'decodes with ASCII length indicator' do
         value = "\x9F\x02\x06\x00\x00\x00\x01\x00\x00"
-        data = '009' + value
+        data = "009#{value}"
 
         decoded, bytes_consumed = codec.decode(field, data)
         expect(decoded).to eq(value)

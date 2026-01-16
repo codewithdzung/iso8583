@@ -31,12 +31,12 @@ module Iso8583
 
     # Enable debug mode
     # @return [Boolean]
-    attr_accessor :debug
+    attr_accessor :debug_mode
 
     # Debug output
     # @param msg [String] Debug message
     def debug(msg)
-      puts "[ISO8583 DEBUG] #{msg}" if @debug
+      puts "[ISO8583 DEBUG] #{msg}" if @debug_mode
     end
   end
 end

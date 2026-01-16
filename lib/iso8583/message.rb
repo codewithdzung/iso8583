@@ -55,9 +55,12 @@ module Iso8583
     # Check if field is present
     # @param field_num [Integer] Field number
     # @return [Boolean]
-    def has_field?(field_num)
+    def field?(field_num)
       @fields.key?(field_num)
     end
+
+    # Alias for backwards compatibility
+    alias has_field? field?
 
     # Remove a field
     # @param field_num [Integer] Field number
@@ -109,9 +112,8 @@ module Iso8583
 
     # Parse message from binary format
     # @param data [String] Binary message data
-    # @param encoding [Symbol] Default encoding for undefined fields
     # @return [Message] Parsed message
-    def self.parse(data, encoding: :ascii)
+    def self.parse(data)
       raise ParseError, 'Message data cannot be empty' if data.nil? || data.empty?
 
       offset = 0
@@ -125,7 +127,7 @@ module Iso8583
       # Parse bitmap
       raise ParseError, 'Insufficient data for bitmap' if data.bytesize < offset + 8
 
-      bitmap = Bitmap.parse_binary(data[offset..-1])
+      bitmap = Bitmap.parse_binary(data[offset..])
       bitmap_size = bitmap.secondary_bitmap? ? 16 : 8
       offset += bitmap_size
 
@@ -212,7 +214,8 @@ module Iso8583
                           value
                         end
 
-        lines << format('  %3d: %-40s = %s', field_num, field_name, display_value)
+        lines << format('  %<num>3d: %-<name>40s = %<value>s',
+                        num: field_num, name: field_name, value: display_value)
       end
 
       lines.join("\n")

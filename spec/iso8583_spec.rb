@@ -198,8 +198,8 @@ RSpec.describe Iso8583 do
 
   describe 'library features' do
     it 'provides debug mode' do
-      expect(Iso8583).to respond_to(:debug)
-      expect(Iso8583).to respond_to(:debug=)
+      expect(Iso8583).to respond_to(:debug_mode)
+      expect(Iso8583).to respond_to(:debug_mode=)
     end
 
     it 'provides version information' do

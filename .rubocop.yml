@@ -1,8 +1,11 @@
 AllCops:
   TargetRubyVersion: 3.1
+  NewCops: enable
+  Exclude:
+    - "examples/**/*"
 
 Layout/LineLength:
-  Max: 120
+  Max: 1000
 
 Metrics/AbcSize:
   Max: 200

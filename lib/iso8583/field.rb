@@ -92,7 +92,7 @@ module Iso8583
     private
 
     def validate_params!(number, length_type, data_type, encoding)
-      raise ArgumentError, "Field number must be 0-128" unless (0..128).cover?(number)
+      raise ArgumentError, 'Field number must be 0-128' unless (0..128).cover?(number)
       raise ArgumentError, "Invalid length type: #{length_type}" unless LENGTH_TYPES.include?(length_type)
       raise ArgumentError, "Invalid data type: #{data_type}" unless TYPES.key?(data_type)
       raise ArgumentError, "Invalid encoding: #{encoding}" unless ENCODING_FORMATS.include?(encoding)

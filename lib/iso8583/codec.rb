@@ -72,9 +72,7 @@ module Iso8583
         pos += field.length_indicator_size
 
         # Validate length
-        if length > field.max_length
-          raise ParseError, "Field #{field.number}: length #{length} exceeds max #{field.max_length}"
-        end
+        raise ParseError, "Field #{field.number}: length #{length} exceeds max #{field.max_length}" if length > field.max_length
 
         # Read value
         value = data[pos, length]
@@ -191,9 +189,7 @@ module Iso8583
         length = decode_length(data, pos, field.length_indicator_size)
         pos += field.length_indicator_size
 
-        if length > field.max_length
-          raise ParseError, "Field #{field.number}: binary length #{length} exceeds max #{field.max_length}"
-        end
+        raise ParseError, "Field #{field.number}: binary length #{length} exceeds max #{field.max_length}" if length > field.max_length
 
         value = data[pos, length]
         raise ParseError, "Insufficient binary data for field #{field.number}" if value.nil? || value.bytesize < length
