@@ -17,7 +17,8 @@ module Iso8583
     # Set a field as present
     # @param field_num [Integer] Field number (1-128)
     def set(field_num)
-      raise ArgumentError, "Field number must be between 1 and 128" unless (1..128).cover?(field_num)
+      raise ArgumentError, 'Field number must be between 1 and 128' unless (1..128).cover?(field_num)
+
       @fields.add(field_num)
     end
 
@@ -44,7 +45,7 @@ module Iso8583
     # @return [String] Binary encoded bitmap
     def encode_binary
       bytes = Array.new(8, 0)
-      
+
       # Set bit 1 if secondary bitmap is needed
       if secondary_bitmap?
         bytes[0] |= 0x80
@@ -54,17 +55,17 @@ module Iso8583
       # Set bits for each field
       @fields.each do |field|
         next if field < 1 || field > 128
-        
+
         # Determine which bitmap (primary or secondary)
         if field <= 64
           byte_index = (field - 1) / 8
           bit_index = 7 - ((field - 1) % 8)
-          bytes[byte_index] |= (1 << bit_index)
         else
-          byte_index = 8 + (field - 65) / 8
+          byte_index = 8 + ((field - 65) / 8)
           bit_index = 7 - ((field - 65) % 8)
-          bytes[byte_index] |= (1 << bit_index)
         end
+
+        bytes[byte_index] |= (1 << bit_index)
       end
 
       bytes.pack('C*')
@@ -80,27 +81,24 @@ module Iso8583
     # @param data [String] Binary bitmap data (at least 8 bytes)
     # @return [Bitmap] New Bitmap instance
     def self.parse_binary(data)
-      raise ArgumentError, "Bitmap data must be at least 8 bytes" if data.bytesize < 8
+      raise ArgumentError, 'Bitmap data must be at least 8 bytes' if data.bytesize < 8
 
       fields = []
       bytes = data.bytes
 
       # Check if secondary bitmap is present (bit 1 of first byte)
-      has_secondary = (bytes[0] & 0x80) != 0
-      bitmap_size = has_secondary ? 16 : 8
+      has_secondary = bytes[0].anybits?(0x80)
 
-      raise ArgumentError, "Insufficient data for secondary bitmap" if has_secondary && data.bytesize < 16
+      raise ArgumentError, 'Insufficient data for secondary bitmap' if has_secondary && data.bytesize < 16
 
       # Parse primary bitmap (fields 2-64)
       (0...8).each do |byte_index|
         byte = bytes[byte_index]
         (0...8).each do |bit_index|
-          field = byte_index * 8 + (7 - bit_index) + 1
+          field = (byte_index * 8) + (7 - bit_index) + 1
           next if field == 1 # Skip bit 1 (reserved for secondary bitmap indicator)
-          
-          if (byte & (1 << bit_index)) != 0
-            fields << field
-          end
+
+          fields << field if (byte & (1 << bit_index)) != 0
         end
       end
 
@@ -109,10 +107,8 @@ module Iso8583
         (8...16).each do |byte_index|
           byte = bytes[byte_index]
           (0...8).each do |bit_index|
-            field = (byte_index - 8) * 8 + (7 - bit_index) + 65
-            if (byte & (1 << bit_index)) != 0
-              fields << field
-            end
+            field = ((byte_index - 8) * 8) + (7 - bit_index) + 65
+            fields << field if (byte & (1 << bit_index)) != 0
           end
         end
       end
@@ -124,7 +120,8 @@ module Iso8583
     # @param hex [String] Hexadecimal bitmap (16 or 32 characters)
     # @return [Bitmap] New Bitmap instance
     def self.parse_hex(hex)
-      raise ArgumentError, "Hex bitmap must be at least 16 characters" if hex.length < 16
+      raise ArgumentError, 'Hex bitmap must be at least 16 characters' if hex.length < 16
+
       binary = [hex[0...32]].pack('H*')
       parse_binary(binary)
     end
